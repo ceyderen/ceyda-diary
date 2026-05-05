@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
   
+  
   const [posts, setPosts] = useState([
       {
         id: 1,
