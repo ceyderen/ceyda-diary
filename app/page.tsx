@@ -3,31 +3,29 @@
 import { useState, useRef, useEffect } from "react";
 
 export default function Home() {
-  
-  
   const [posts, setPosts] = useState([
-      {
-        id: 1,
-        title: "Bugün Hissedilenler",
-        content: "Bugün biraz karışık ama güzel bir gündü...",
-      },
-      {
-        id: 2,
-        title: "Küçük Bir Not",
-        content: "Kendime hatırlatma: daha sakin ol.",
-      },
-    ]);
-
+    {
+      id: 1,
+      title: "Bugün Hissedilenler",
+      content: "Bugün biraz karışık ama güzel bir gündü...",
+    },
+    {
+      id: 2,
+      title: "Küçük Bir Not",
+      content: "Kendime hatırlatma: daha sakin ol.",
+    },
+  ]);
 
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const isDragging = useRef(false);
   const [message, setMessage] = useState("");
   const [isHolding, setIsHolding] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode] = useState(false);
+
   const [selectedPost, setSelectedPost] = useState<null | {
-  id: number;
-  title: string;
-  content: string;
+    id: number;
+    title: string;
+    content: string;
   }>(null);
 
   useEffect(() => {
@@ -71,15 +69,21 @@ export default function Home() {
 
   return (
     <div
-        className={`min-h-screen p-6 transition duration-500 ${
-          darkMode ? "bg-[#111827]" : "bg-[#f3f2f0]"
-        }`}
-        >
-      <div
-      className={`min-h-[calc(100vh-48px)] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden transition duration-500 ${
-        darkMode ? "bg-[#1f2937]/90 text-gray-100" : "bg-white/80 text-gray-800"
+      className={`min-h-screen p-6 transition duration-500 ${
+        darkMode ? "bg-[#111827]" : "bg-[#fbf9ff]"
       }`}
-    >
+    > 
+    {/* dreamy glow */}
+<div className="absolute top-0 left-[-220px] h-[520px] w-[520px] rounded-full bg-[#eadcff] opacity-35 blur-3xl" />
+
+<div className="absolute right-[-180px] top-[260px] h-[480px] w-[480px] rounded-full bg-[#f3dfff] opacity-35 blur-3xl" /> 
+      <div
+        className={`min-h-[calc(100vh-48px)] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden transition duration-500 ${
+          darkMode
+            ? "bg-[#1f2937]/90 text-gray-100"
+            : "bg-white/70 backdrop-blur-xl border border-[#eee7fb] text-gray-800"
+        }`}
+      >
         <div className="grid grid-cols-12 gap-6 p-8">
           {/* SOL */}
           <div className="col-span-3 space-y-6">
@@ -90,9 +94,9 @@ export default function Home() {
                 className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
               />
 
-                <h2 className="font-serif italic text-3xl font-normal text-gray-600 tracking-wide">
+              <h2 className="font-serif italic text-3xl font-normal text-gray-600 tracking-wide">
                 ceyda <span className="text-[#a8a1dc]">♡</span>
-                  </h2>
+              </h2>
 
               <p className="text-sm text-gray-500 mt-2 leading-relaxed">
                 yazıyorum, yaşıyorum, öğreniyorum.
@@ -105,7 +109,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* ŞU AN DİNLEDİĞİM */}
             <div className="bg-white/70 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
               <p className="text-sm text-gray-500 mb-4">🎧 şu an dinlediğim</p>
 
@@ -117,7 +120,9 @@ export default function Home() {
                 />
 
                 <div>
-                  <p className="text-sm font-semibold text-gray-800">Where's My Phone?</p>
+                  <p className="text-sm font-semibold text-gray-800">
+                    Where&apos;s My Phone?
+                  </p>
                   <p className="text-xs text-gray-400 mt-1">Mitski</p>
                 </div>
               </div>
@@ -145,69 +150,62 @@ export default function Home() {
                 <button className="hover:text-[#b7b0e8] transition">♡</button>
               </div>
             </div>
-            
 
             <div className="bg-white/70 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
               <p className="font-medium text-gray-700 mb-4">kısayollar</p>
 
               <div className="space-y-3 text-sm text-gray-600">
                 {[
-                "📖 yazılarım",
-                "🌙 günlüğüm",
-                "🎧 müzikler",
-                "📷 foto köşesi",
-                "💌 iletişim",
-              ].map((item) => (
-                <div
-                  key={item}
-                  className="flex justify-between items-center hover:text-[#9b94d9] transition cursor-pointer"
-                >
-                  <span>{item}</span>
-                  <span>›</span>
-                </div>
-              ))}
+                  "📖 yazılarım",
+                  "🌙 günlüğüm",
+                  "🎧 müzikler",
+                  "📷 foto köşesi",
+                  "💌 iletişim",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="flex justify-between items-center hover:text-[#9b94d9] transition cursor-pointer"
+                  >
+                    <span>{item}</span>
+                    <span>›</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
           {/* ORTA */}
           <div className="col-span-6 space-y-6">
-          {/* HERO */}
-          <div className="relative h-[260px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)]hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-            
-            {/* ARKA PLAN */}
-            <img
-              src="/hero.jpg"
-              className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105"
-            />
+            <div className="relative h-[260px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
+              <img
+                src="/hero.jpg"
+                alt="hero"
+                className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105"
+              />
 
-            {/* OVERLAY */}
-            <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
+              <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
 
-            {/* ORTA KART */}
-            <div className="absolute inset-0 flex items-center justify-center">
-            <div className="bg-white/90 backdrop-blur-md px-10 py-6 rounded-3xl shadow-xl text-center max-w-sm hover:scale-105 transition duration-300">
-                
-                <p className="text-[11px] tracking-widest text-gray-400 mb-2">
-                  GÜNLÜK • 3 MAYIS 2026
-                </p>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-white/90 backdrop-blur-md px-10 py-6 rounded-3xl shadow-xl text-center max-w-sm hover:scale-105 transition duration-300">
+                  <p className="text-[11px] tracking-widest text-gray-400 mb-2">
+                    GÜNLÜK • 3 MAYIS 2026
+                  </p>
 
-                <h2 className="font-serif italic text-3xl font-normal text-gray-700 tracking-wide">
-                  yeni başlangıçlar{" "}
-                  <span className="text-[#a8a1dc]">♡</span>
-                </h2>
+                  <h2 className="font-serif italic text-3xl font-normal text-gray-700 tracking-wide">
+                    yeni başlangıçlar{" "}
+                    <span className="text-[#a8a1dc]">♡</span>
+                  </h2>
 
-                <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-                  Bazen her şeyi geride bırakmak yeni bir sen yazmak demektir.
-                </p>
+                  <p className="text-sm text-gray-500 mt-3 leading-relaxed">
+                    Bazen her şeyi geride bırakmak yeni bir sen yazmak demektir.
+                  </p>
 
-                <span className="block text-xs text-gray-400 mt-4 cursor-pointer hover:text-[#b7b0e8] transition">
-                  devamını oku →
-                </span>
-
+                  <span className="block text-xs text-gray-400 mt-4 cursor-pointer hover:text-[#b7b0e8] transition">
+                    devamını oku →
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
             <div className="flex justify-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#9b94d9]" />
@@ -272,51 +270,49 @@ export default function Home() {
               <p className="text-3xl text-[#9b94d9] mt-4">♡</p>
             </div>
 
-            {/* PLAYLIST */}
-          <div className="bg-white/70 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-sm font-medium text-gray-700">🎵 playlist</p>
-              <span className="text-xs text-[#a8a1dc] cursor-pointer">
-                tümünü aç →
-              </span>
-            </div>
-
-            <div className="space-y-3 text-sm">
-              {[
-                ["1", "Illicit Affairs", "Taylor Swift", "3:10"],
-                ["2", "Espresso", "Sabrina Carpenter", "2:55"],
-                ["3", "Birds of a Feather", "Billie Eilish", "3:30"],
-                ["4", "Untouched", "The Veronicas", "4:15"],
-              ].map((song) => (
-                <div
-                  key={song[0]}
-                  className="grid grid-cols-[20px_1fr_1fr_40px] gap-2 text-xs items-center"
-                >
-                  <span className="text-gray-400">{song[0]}</span>
-                  <span className="text-gray-800">{song[1]}</span>
-                  <span className="text-gray-400">{song[2]}</span>
-                  <span className="text-gray-400 text-right">{song[3]}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-5 h-12 bg-[#eeeaf8] rounded-xl flex items-center gap-3 px-3 text-[#a8a1dc]">
-              <div className="w-7 h-7 rounded-full bg-[#a8a1dc] text-white flex items-center justify-center text-xs">
-                ▶
+            <div className="bg-white/70 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
+              <div className="flex justify-between items-center mb-4">
+                <p className="text-sm font-medium text-gray-700">🎵 playlist</p>
+                <span className="text-xs text-[#a8a1dc] cursor-pointer">
+                  tümünü aç →
+                </span>
               </div>
 
-              <div className="flex-1 flex items-center gap-1">
-                {Array.from({ length: 52 }).map((_, i) => ( 
-                  <span
-                    key={i}
-                    className="w-[3px] bg-[#a8a1dc] rounded-full"
-                    style={{ height: `${8 + (i % 5) * 3}px` }}
-                  />
+              <div className="space-y-3 text-sm">
+                {[
+                  ["1", "Illicit Affairs", "Taylor Swift", "3:10"],
+                  ["2", "Espresso", "Sabrina Carpenter", "2:55"],
+                  ["3", "Birds of a Feather", "Billie Eilish", "3:30"],
+                  ["4", "Untouched", "The Veronicas", "4:15"],
+                ].map((song) => (
+                  <div
+                    key={song[0]}
+                    className="grid grid-cols-[20px_1fr_1fr_40px] gap-2 text-xs items-center"
+                  >
+                    <span className="text-gray-400">{song[0]}</span>
+                    <span className="text-gray-800">{song[1]}</span>
+                    <span className="text-gray-400">{song[2]}</span>
+                    <span className="text-gray-400 text-right">{song[3]}</span>
+                  </div>
                 ))}
               </div>
+
+              <div className="mt-5 h-12 bg-[#eeeaf8] rounded-xl flex items-center gap-3 px-3 text-[#a8a1dc]">
+                <div className="w-7 h-7 rounded-full bg-[#a8a1dc] text-white flex items-center justify-center text-xs">
+                  ▶
+                </div>
+
+                <div className="flex-1 flex items-center gap-1">
+                  {Array.from({ length: 52 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className="w-[3px] bg-[#a8a1dc] rounded-full"
+                      style={{ height: `${8 + (i % 5) * 3}px` }}
+                    />
+                  ))}
+                </div>
               </div>
-              </div>
-  
+            </div>
 
             <div className="bg-white/70 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
               <p className="text-sm text-gray-500 mb-3">yapılacaklar</p>
@@ -339,33 +335,21 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-4 gap-2">
-                <img
-                  src="/foto1.jpg"
-                  alt="anı 1"
-                  className="rounded-lg h-20 object-cover"
-                />
-                <img
-                  src="/foto2.jpg"
-                  alt="anı 2"
-                  className="rounded-lg h-20 object-cover"
-                />
-                <img
-                  src="/foto3.jpg"
-                  alt="anı 3"
-                  className="rounded-lg h-20 object-cover"
-                />
-                <img
-                  src="/foto4.jpg"
-                  alt="anı 4"
-                  className="rounded-lg h-20 object-cover"
-                />
+                {[1, 2, 3, 4].map((n) => (
+                  <img
+                    key={n}
+                    src={`/foto${n}.jpg`}
+                    alt={`anı ${n}`}
+                    className="rounded-lg h-20 object-cover"
+                  />
+                ))}
               </div>
             </div>
           </div>
         </div>
 
         <footer className="px-10 pb-6 flex justify-between text-xs text-gray-400">
-          <p>© 2026 ceyda's diary. tüm hakları saklıdır.</p>
+          <p>© 2026 ceyda&apos;s diary. tüm hakları saklıdır.</p>
           <p>made with ♡ by ceyda</p>
         </footer>
       </div>
@@ -418,35 +402,34 @@ export default function Home() {
         </div>
       )}
 
-      {/* YAZI DETAY POPUP */}
-        {selectedPost && (
+      {selectedPost && (
         <div
-        onClick={() => setSelectedPost(null)}
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
+          onClick={() => setSelectedPost(null)}
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
         >
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="bg-white w-[500px] p-8 rounded-3xl shadow-2xl relative animate-[fadeIn_0.3s_ease]"
-        >
-      <button
-        onClick={() => setSelectedPost(null)}
-        className="absolute top-4 right-5 text-gray-400 hover:text-black"
-      >
-        ✕
-      </button>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white w-[500px] p-8 rounded-3xl shadow-2xl relative animate-[fadeIn_0.3s_ease]"
+          >
+            <button
+              onClick={() => setSelectedPost(null)}
+              className="absolute top-4 right-5 text-gray-400 hover:text-black"
+            >
+              ✕
+            </button>
 
-      <p className="text-xs text-[#9b94d9] mb-3">bugünün yazısı</p>
+            <p className="text-xs text-[#9b94d9] mb-3">bugünün yazısı</p>
 
-      <h2 className="text-2xl font-semibold text-gray-900 leading-snug">
-        {selectedPost.title}
-      </h2>
+            <h2 className="text-2xl font-semibold text-gray-900 leading-snug">
+              {selectedPost.title}
+            </h2>
 
-      <p className="text-sm text-gray-500 mt-5 leading-relaxed">
-        {selectedPost.content}
-      </p>
-    </div>
-  </div>
-)}
+            <p className="text-sm text-gray-500 mt-5 leading-relaxed">
+              {selectedPost.content}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -52,7 +52,10 @@ const defaultPosts = [
     };
 
   return (
-    <main className="min-h-screen bg-[#fbfbfd] text-gray-800">
+    <main className="relative min-h-screen overflow-hidden bg-[#fbf9ff]">
+      <div className="absolute top-0 left-[-200px] h-[500px] w-[500px] rounded-full bg-[#eadcff] opacity-30 blur-3xl" />
+
+      <div className="absolute right-[-150px] top-[200px] h-[450px] w-[450px] rounded-full bg-[#f3dfff] opacity-30 blur-3xl" />
       <div className="max-w-7xl mx-auto px-10 py-14 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-14">
         <article className="max-w-3xl">
           <div className="space-y-10">
@@ -62,7 +65,7 @@ const defaultPosts = [
               </p>
 
               <h1 className="font-serif text-5xl md:text-6xl text-gray-700">
-                yazılarım <span className="text-[#a8a1dc]">♡</span>
+                yazılarım <span className="text-[#2f3c5b]">♡</span>
               </h1>
 
               <p className="text-gray-500 mt-5 text-lg">
@@ -74,7 +77,7 @@ const defaultPosts = [
               <div
                 key={`${post.id}-${index}`}
                 onClick={() => router.push(`/yazi/${post.id}`)}
-                className="flex gap-6 items-center bg-white rounded-3xl p-5 shadow-sm border border-gray-100 hover:-translate-y-1 transition cursor-pointer"
+                className="flex gap-6 items-center bg-white/80 backdrop-blur-md rounded-3xl p-5 shadow-sm border border-gray-100 hover:-translate-y-1 transition cursor-pointer"
               >
                 <div className="relative w-40 h-28 rounded-xl overflow-hidden flex-shrink-0">
                   <Image
@@ -125,24 +128,26 @@ const defaultPosts = [
             <div className="text-[#a8a1dc] text-2xl mt-6 text-center">♡</div>
           </SideCard>
 
-          <SideCard title="playlist">
-            <div className="space-y-4 text-sm">
-              <Song no="1" title="Illicit Affairs" artist="Taylor Swift" time="3:10" />
-              <Song no="2" title="Espresso" artist="Sabrina Carpenter" time="2:55" />
-              <Song no="3" title="Birds of a Feather" artist="Billie Eilish" time="3:30" />
-              <Song no="4" title="Untouched" artist="The Veronicas" time="4:15" />
-            </div>
+          <div className="bg-[#f8f4ff]/90 backdrop-blur-xl rounded-[30px] shadow-[0_15px_50px_rgba(180,160,220,0.14)] border border-[#eee7fb] p-6">
+  <h3 className="text-sm text-[#7c739c] mb-5">playlist</h3>
 
-            <div className="mt-6 h-11 rounded-xl bg-[#eeeafd] flex items-center px-4 gap-1">
-              {Array.from({ length: 38 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="w-1 rounded-full bg-[#a8a1dc]"
-                  style={{ height: `${10 + (i % 5) * 5}px` }}
-                />
-              ))}
-            </div>
-          </SideCard>
+  <div className="space-y-4 text-sm">
+    <Song no="1" title="Illicit Affairs" artist="Taylor Swift" time="3:10" />
+    <Song no="2" title="Espresso" artist="Sabrina Carpenter" time="2:55" />
+    <Song no="3" title="Birds of a Feather" artist="Billie Eilish" time="3:30" />
+    <Song no="4" title="Untouched" artist="The Veronicas" time="4:15" />
+  </div>
+
+  <div className="mt-6 h-11 rounded-2xl bg-[#eee7ff] flex items-center px-4 gap-1 overflow-hidden">
+    {Array.from({ length: 38 }).map((_, i) => (
+      <div
+        key={i}
+        className="w-1 rounded-full bg-[#b49af5]"
+        style={{ height: `${10 + (i % 5) * 5}px` }}
+      />
+    ))}
+  </div>
+</div>
 
           <SideCard title="bu yazıya benzer">
             <div className="space-y-5">
@@ -177,7 +182,7 @@ function SideCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+    <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-sm border border-gray-100 p-6">
       <h3 className="text-sm text-gray-500 mb-5">{title}</h3>
       {children}
     </div>

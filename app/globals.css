@@ -39,3 +39,43 @@ button {
 img {
   max-width: 100%;
 }
+
+body {
+  background: #fbf9ff;
+}
+
+::selection {
+  background: #d8c4ff;
+  color: white;
+}
+
+body {
+  background: #fbf9ff;
+  color: #35415c;
+}
+
+::selection {
+  background: #d8c4ff;
+  color: white;
+}
+
+.soft-card {
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(18px);
+  border: 1px solid #eee7fb;
+  box-shadow: 0 12px 40px rgba(180,160,220,.12);
+  transition: .3s ease;
+}
+
+.soft-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 50px rgba(180,160,220,.18);
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
