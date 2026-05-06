@@ -150,8 +150,8 @@
           }
         };
       return (
-        <main className="relative min-h-screen overflow-hidden bg-[#faf6ff] px-6 py-10 text-[#293046]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(218,199,255,0.45),transparent_30%),radial-gradient(circle_at_82%_16%,rgba(255,221,235,0.55),transparent_32%),radial-gradient(circle_at_55%_82%,rgba(235,218,255,0.48),transparent_38%),linear-gradient(180deg,#fffaff_0%,#faf6ff_45%,#fffafd_100%)]" />
+        <main className="relative min-h-screen overflow-hidden bg-[#faf6ff] dark:bg-[#0f1117] px-6 py-10 text-[#293046] dark:text-gray-100 transition duration-500">  
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(218,199,255,0.45),transparent_30%),radial-gradient(circle_at_82%_16%,rgba(255,221,235,0.55),transparent_32%),radial-gradient(circle_at_55%_82%,rgba(235,218,255,0.48),transparent_38%),linear-gradient(180deg,#fffaff_0%,#faf6ff_45%,#fffafd_100%) dark:opacity-20]" />
           <div className="pointer-events-none absolute left-10 top-24 text-3xl text-white/80">
             ✦
           </div>
@@ -294,7 +294,7 @@
             {nowPlaying?.artist || "Spotify kapalı olabilir"}
           </p>
 
-          <div className="mt-2 inline-flex rounded-full bg-white/70 px-3 py-1 text-[11px] text-[#9b8ed8]">
+          <div className="mt-2 inline-flex rounded-full bg-white/70 dark:bg-[#171923]/80 px-3 py-1 text-[11px] text-[#9b8ed8]">
             live from Spotify
           </div>
         </div>
@@ -316,7 +316,7 @@
         </div>
       </div>
 
-      <div className="relative z-10 mt-5 h-[6px] rounded-full bg-white/70">
+      <div className="relative z-10 mt-5 h-[6px] rounded-full bg-white/70 dark:bg-[#171923]/80">
         <div
           className="h-[6px] rounded-full bg-gradient-to-r from-[#b7a2f5] via-[#d9b7ff] to-[#f6c7df] transition-all duration-500"
           style={{ width: `${progress}%` }}

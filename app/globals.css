@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @keyframes float {
   0% {
@@ -78,4 +79,85 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.dark body {
+  background: #0f1117;
+  color: white;
+  transition: 0.4s;
+}
+
+.dark .bg-white\/70 {
+  background: rgba(22, 24, 34, 0.75) !important;
+}
+
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-gray-600 {
+  color: #f3f4f6 !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-400 {
+  color: #b6bdd1 !important;
+}
+
+.dark .border-gray-100 {
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+.dark body {
+  background: #0f1117 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark main,
+.dark section {
+  background-color: #0f1117;
+  color: #f3f4f6;
+}
+
+.dark .bg-white,
+.dark .bg-white\/70,
+.dark .bg-white\/80,
+.dark .bg-white\/90 {
+  background: rgba(23, 25, 35, 0.82) !important;
+}
+
+.dark .bg-\[\#fbf9ff\],
+.dark .bg-\[\#faf6ff\],
+.dark .bg-\[\#fffaff\],
+.dark .bg-\[\#fffafd\] {
+  background: #0f1117 !important;
+}
+
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-\[\#293046\],
+.dark .text-\[\#35415c\] {
+  color: #f3f4f6 !important;
+}
+
+.dark .text-gray-500,
+.dark .text-gray-400 {
+  color: #b8bfd3 !important;
+}
+
+.dark .border-gray-100,
+.dark .border-\[\#eee7fb\],
+.dark .border-\[\#eee7f8\] {
+  border-color: rgba(255, 255, 255, 0.1) !important;
 }
