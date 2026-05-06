@@ -63,7 +63,13 @@ export default function RootLayout({
                 <span className="absolute left-1/2 -bottom-4 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#a8a1dc]" />
               </div>
 
-              <span className="cursor-pointer hover:text-[#a8a1dc] transition">yazılarım</span>
+              <Link
+                href="/yazilarim"
+                className="cursor-pointer hover:text-[#a8a1dc] transition"
+              >
+                yazılarım
+              </Link>
+              
               <Link
                 href="/yeni-yazi"
                 className="cursor-pointer hover:text-[#a8a1dc] transition"
@@ -71,7 +77,7 @@ export default function RootLayout({
                 günlüğüm
               </Link>
               <span className="cursor-pointer hover:text-[#a8a1dc] transition">foto köşesi</span>
-              <span className="cursor-pointer hover:text-[#a8a1dc] transition">müzikler</span>
+              <Link href="/muzikler">müzikler</Link>
               <span className="cursor-pointer hover:text-[#a8a1dc] transition">hakkımda</span>
               <span className="cursor-pointer hover:text-[#a8a1dc] transition">iletişim</span>
             </nav>

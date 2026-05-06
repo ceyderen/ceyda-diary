@@ -1,63 +1,98 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function YeniYazi() {
+export default function GunlugumPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [image, setImage] = useState("/post1.jpg");
 
-  const handleSubmit = () => {
-    if (!title || !content) return;
+  const router = useRouter();
+
+  const savePost = () => {
+    if (!title.trim() || !content.trim()) return;
 
     const existing = localStorage.getItem("posts");
     const posts = existing ? JSON.parse(existing) : [];
 
     const newPost = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       title,
+      desc: content.slice(0, 90) + "...",
+      image,
+      date: new Date().toLocaleDateString("tr-TR"),
       content,
     };
 
-    const updated = [newPost, ...posts];
-
-    localStorage.setItem("posts", JSON.stringify(updated));
+    localStorage.setItem("posts", JSON.stringify([newPost, ...posts]));
 
     setTitle("");
     setContent("");
+    setImage("/post1.jpg");
 
-    alert("yazı eklendi ✨");
+    router.push("/yazilarim");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f3f2f0]">
-      <div className="bg-white/80 backdrop-blur-md p-8 rounded-3xl shadow-xl w-[400px] space-y-4">
-        
-        <h2 className="font-serif text-2xl text-center">
-          yeni yazı ekle ✨
-        </h2>
+    <main className="min-h-screen bg-[#fbfbfd] text-gray-800 px-6 py-16">
+      <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+        <p className="text-xs tracking-[0.25em] uppercase text-[#a8a1dc] mb-4">
+          günlüğüm
+        </p>
+
+        <h1 className="font-serif text-5xl text-gray-700 mb-6">
+          bugün ne yazmak istersin?
+        </h1>
 
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="başlık..."
-          className="w-full p-3 rounded-xl border outline-none"
+          className="w-full border-b border-gray-200 py-4 outline-none text-2xl font-serif mb-8"
         />
 
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="bugün ne hissettin..."
-          className="w-full p-3 rounded-xl border h-32 resize-none outline-none"
+          placeholder="bugün neler hissettin?"
+          className="w-full min-h-[260px] resize-none outline-none leading-8 text-gray-700"
         />
 
+        <div className="mt-8">
+          <p className="text-sm text-gray-500 mb-4">yazı görseli seç</p>
+
+          <div className="grid grid-cols-4 gap-4">
+            {["/post1.jpg", "/post2.jpg", "/post3.jpg", "/post4.jpg"].map(
+              (img) => (
+                <button
+                  key={img}
+                  type="button"
+                  onClick={() => setImage(img)}
+                  className={`relative h-24 rounded-2xl overflow-hidden border-2 transition ${
+                    image === img
+                      ? "border-[#a8a1dc] scale-105"
+                      : "border-transparent opacity-80 hover:opacity-100"
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt="seçilecek görsel"
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              )
+            )}
+          </div>
+        </div>
+
         <button
-          onClick={handleSubmit}
-          className="w-full bg-[#b7b0e8] text-white py-2 rounded-xl hover:scale-105 transition"
+          onClick={savePost}
+          className="mt-8 px-6 py-3 rounded-full bg-[#a8a1dc] text-white hover:opacity-90 transition"
         >
           kaydet
         </button>
-
       </div>
-    </div>
+    </main>
   );
 }
