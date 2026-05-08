@@ -129,7 +129,6 @@
           return `${minutes}:${seconds}`;
         };
 
-
           const controlSpotify = async (
           action: "play" | "pause" | "next" | "previous"
         ) => {

@@ -115,7 +115,7 @@ export default function HakkimdaPage() {
                   desc="içimden geçenleri paylaştığım yazılar"
                 />
                 <MiniLink
-                  href="/gunlugum"
+                  href="/yeni-yazi"
                   icon={<Moon />}
                   title="günlüğüm"
                   desc="günlük düşüncelerim ve anılarım"

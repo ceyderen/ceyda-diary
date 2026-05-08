@@ -1,6 +1,8 @@
   "use client";
 
-  import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
   export default function Home() {
     const [posts, setPosts] = useState([
@@ -68,24 +70,31 @@
 
     return (
       <div
-        className="min-h-screen p-6 transition duration-500 bg-[#fbf9ff] dark:bg-[#0f1117]"
-      > 
+        className="min-h-screen overflow-x-hidden p-3 transition duration-500 bg-[#fbf9ff] dark:bg-[#0f1117] md:p-6"      > 
       {/* dreamy glow */}
-  <div className="absolute top-0 left-[-220px] h-[520px] w-[520px] rounded-full bg-[#eadcff] opacity-35 blur-3xl" />
+          {/* dreamy glow */}
+          <div className="pointer-events-none absolute top-0 left-[-220px] h-[520px] w-[520px] rounded-full bg-[#eadcff] opacity-35 blur-3xl" />
+          <div className="pointer-events-none absolute right-[-180px] top-[260px] h-[480px] w-[480px] rounded-full bg-[#f3dfff] opacity-35 blur-3xl" />
 
-  <div className="absolute right-[-180px] top-[260px] h-[480px] w-[480px] rounded-full bg-[#f3dfff] opacity-35 blur-3xl" /> 
-        <div className="min-h-[calc(100vh-48px)] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden transition duration-500 bg-white/70 dark:bg-[#1f2937]/90 backdrop-blur-xl border border-[#eee7fb] dark:border-white/10 text-gray-800 dark:text-gray-100">
-          <div className="grid grid-cols-12 gap-6 p-8">
+
+          <div className="mx-auto min-h-[calc(100vh-48px)] max-w-[1500px] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.08)] overflow-hidden transition duration-500 bg-white/65 dark:bg-[#1f2937]/85 backdrop-blur-xl border border-[#eee7fb] dark:border-white/10 text-gray-800 dark:text-gray-100">          
+          <div className="grid grid-cols-1 gap-6 p-4 md:p-6 2xl:grid-cols-12 xl:p-8">
+
             {/* SOL */}
-            <div className="col-span-3 space-y-6">
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300 text-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
+              className="xl:col-span-3 space-y-6"
+            >
+              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300 text-center">
                 <img
                   src="/ceyda.jpg"
                   alt="ceyda"
                   className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
                 />
 
-                <h2 className="font-serif italic text-3xl font-normal text-gray-600 tracking-wide">
+                <h2 className="font-serif italic text-2xl md:text-3xl font-normal text-gray-600 tracking-wide">
                   ceyda <span className="text-[#a8a1dc]">♡</span>
                 </h2>
 
@@ -95,12 +104,15 @@
                   burası benim küçük dünyam.
                 </p>
 
-                <p className="text-xs text-[#9b94d9] mt-4 cursor-pointer">
-                  devamını oku →
-                </p>
+                <Link
+                href="/hakkimda"
+                className="mt-4 inline-block text-xs text-[#9b94d9] hover:translate-x-1 transition"
+              >
+                devamını oku →
+              </Link>
               </div>
 
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
+              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300">
                 <p className="text-sm text-gray-500 mb-4">🎧 şu an dinlediğim</p>
 
                 <div className="flex gap-4 items-center">
@@ -142,114 +154,197 @@
                 </div>
               </div>
 
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-                <p className="font-medium text-gray-700 mb-4">kısayollar</p>
+             <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300">
+  <p className="font-medium text-gray-700 dark:text-gray-100 mb-4">
+    kısayollar
+  </p>
 
-                <div className="space-y-3 text-sm text-gray-600">
-                  {[
-                    "📖 yazılarım",
-                    "🌙 günlüğüm",
-                    "🎧 müzikler",
-                    "📷 foto köşesi",
-                    "💌 iletişim",
-                  ].map((item) => (
-                    <div
-                      key={item}
-                      className="flex justify-between items-center hover:text-[#9b94d9] transition cursor-pointer"
-                    >
-                      <span>{item}</span>
-                      <span>›</span>
+  <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+    {[
+      ["♧", "yazılarım", "/yazilarim"],
+      ["▣", "günlüğüm", "/yeni-yazi"],
+      ["♫", "müzikler", "/muzikler"],
+      ["▧", "foto köşesi", "/foto-kosesi"],
+      ["✎", "misafir defteri", "/misafir-defteri"],
+      ["♙", "hakkımda", "/hakkimda"],
+      ["✉", "iletişim", "/iletisim"],
+    ].map(([icon, title, href]) => (
+      <Link
+        key={title}
+        href={href}
+        className="group flex items-center justify-between rounded-xl px-3 py-2 transition hover:bg-[#f7f4ff] dark:hover:bg-white/10 hover:text-[#9b94d9]"
+      >
+        <span className="flex items-center gap-3">
+          <span className="w-5 text-center text-[#a8a1dc]">{icon}</span>
+          <span>{title}</span>
+        </span>
+
+        <span className="transition group-hover:translate-x-1">›</span>
+      </Link>
+    ))}
+  </div>
+</div>
+            </motion.div>
+
+              {/* ORTA */}
+              <div className="xl:col-span-6 space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 25 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="relative h-[260px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300"
+                >
+                  <img
+                    src="/hero.jpg"
+                    alt="hero"
+                    className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/20 to-[#eadcff]/30 backdrop-blur-[2px]" />
+
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-white/90 dark:bg-[#232738]/90 backdrop-blur-md px-10 py-6 rounded-3xl shadow-xl text-center max-w-sm hover:scale-105 transition duration-300">
+                      <p className="text-[11px] tracking-widest text-gray-400 mb-2">
+                        GÜNLÜK • 3 MAYIS 2026
+                      </p>
+
+                      <h2 className="font-serif italic text-3xl font-normal text-gray-700 dark:text-gray-100 tracking-wide">
+                        yeni başlangıçlar <span className="text-[#a8a1dc]">♡</span>
+                      </h2>
+
+                      <p className="mt-4 text-[15px] leading-relaxed text-[#7d7891] dark:text-gray-300">
+                        Bazen her şeyi geride bırakmak yeni bir sen yazmak demektir.
+                      </p>
+
+                      <Link
+                        href="/yazilarim"
+                        className="mt-4 block text-xs text-gray-400 transition hover:text-[#b7b0e8]"
+                      >
+                        devamını oku →
+                      </Link>
                     </div>
-                  ))}
+                  </div>
+                </motion.div>
+
+                <div className="flex justify-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#9b94d9]" />
+                  <span className="w-2 h-2 rounded-full bg-gray-300" />
+                  <span className="w-2 h-2 rounded-full bg-gray-300" />
+                  <span className="w-2 h-2 rounded-full bg-gray-300" />
                 </div>
-              </div>
-            </div>
 
-            {/* ORTA */}
-            <div className="col-span-6 space-y-6">
-              <div className="relative h-[260px] rounded-3xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-                <img
-                  src="/hero.jpg"
-                  alt="hero"
-                  className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105"
-                />
-
-                <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/90 dark:bg-[#232738]/90 backdrop-blur-md px-10 py-6 rounded-3xl shadow-xl text-center max-w-sm hover:scale-105 transition duration-300">
-                    <p className="text-[11px] tracking-widest text-gray-400 mb-2">
-                      GÜNLÜK • 3 MAYIS 2026
-                    </p>
-
-                    <h2 className="font-serif italic text-3xl font-normal text-gray-700 tracking-wide">
-                      yeni başlangıçlar{" "}
-                      <span className="text-[#a8a1dc]">♡</span>
+                <motion.div
+                  initial={{ opacity: 0, y: 25 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300"
+                >
+                  <div className="flex justify-between items-center mb-5">
+                    <h2 className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                      son yazılar
                     </h2>
 
-                    <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-                      Bazen her şeyi geride bırakmak yeni bir sen yazmak demektir.
-                    </p>
-
-                    <span className="block text-xs text-gray-400 mt-4 cursor-pointer hover:text-[#b7b0e8] transition">
-                      devamını oku →
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#9b94d9]" />
-                <span className="w-2 h-2 rounded-full bg-gray-300" />
-                <span className="w-2 h-2 rounded-full bg-gray-300" />
-                <span className="w-2 h-2 rounded-full bg-gray-300" />
-              </div>
-
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-                <div className="flex justify-between items-center mb-5">
-                  <h2 className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                    son yazılar
-                  </h2>
-
-                  <span className="text-xs text-[#9b94d9] cursor-pointer">
-                    hepsini gör →
-                  </span>
-                </div>
-
-                <div className="space-y-5">
-                  {posts.map((post, i) => (
-                    <div
-                      key={post.id ?? i}
-                      onClick={() => setSelectedPost(post)}
-                      className="flex gap-4 items-center p-2 rounded-xl hover:bg-[#f6f3ff] transition cursor-pointer"
+                    <Link
+                      href="/yazilarim"
+                      className="text-xs text-[#9b94d9] hover:underline"
                     >
-                      <img
-                        src={`/foto${(i % 4) + 1}.jpg`}
-                        alt={post.title}
-                        className="w-28 h-20 rounded-xl object-cover"
-                      />
+                      hepsini gör →
+                    </Link>
+                  </div>
 
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">
-                          {post.title}{" "}
-                          <span className="text-[#9b94d9]">♡</span>
-                        </h3>
+                  <div className="space-y-5">
+                    {posts.map((post, i) => (
+                      <div
+                        key={post.id ?? i}
+                        onClick={() => setSelectedPost(post)}
+                        className="group flex gap-4 items-center rounded-2xl p-3 transition-all duration-300 hover:-translate-y-1 hover:bg-[#f8f5ff] dark:hover:bg-white/5"
+                      >
+                        <img
+                          src={`/foto${(i % 4) + 1}.jpg`}
+                          alt={post.title}
+                          className="h-20 w-28 rounded-2xl object-cover transition duration-300 group-hover:scale-[1.03]"
+                        />
 
-                        <p className="text-sm text-gray-500 mt-1">
-                          {post.content}
-                        </p>
+                        <div className="flex-1">
+                          <p className="mb-1 text-[11px] uppercase tracking-[0.15em] text-[#a8a1dc]">
+                            günlük • 3 dk okuma
+                          </p>
+
+                          <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                            {post.title} <span className="text-[#9b94d9]">♡</span>
+                          </h3>
+
+                          <p className="text-sm text-gray-500 mt-1">{post.content}</p>
+                        </div>
+
+                        <span className="text-xs text-gray-400">bugün</span>
                       </div>
-
-                      <span className="text-xs text-gray-400">bugün</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                    ))}
+                  </div>
+                </motion.div>
+                      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="overflow-hidden rounded-3xl border border-[#eee7fb] bg-gradient-to-r from-[#f6efff]/90 via-white/80 to-[#f4edff]/90 p-6 shadow-[0_15px_45px_rgba(180,160,230,0.16)] backdrop-blur-xl"
+      >
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          
+          <div className="flex items-center gap-5">
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#eee7ff] text-4xl shadow-inner">
+              💌
             </div>
 
+            <div>
+              <h3 className="font-serif text-2xl text-gray-700 dark:text-gray-100">
+                misafir defterine göz at ♡
+              </h3>
+
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-gray-500 dark:text-gray-300">
+                Burada güzel insanlar düşüncelerini, hislerini ve küçük notlarını bırakıyor.
+              </p>
+
+              <Link
+                href="/misafir-defteri"
+                className="mt-4 inline-block rounded-full bg-gradient-to-r from-[#a8a1dc] to-[#c8bfff] px-6 py-3 text-sm text-white shadow-[0_10px_25px_rgba(168,161,220,0.35)] transition hover:-translate-y-1 hover:opacity-90"
+              >
+                misafir defterini aç →
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {[
+              ["buraya yazmak iyi hissettirdi ♡", "melis"],
+              ["bugün biraz yoruldum ama geçecek sanırım.", "anonim"],
+              ["harika bir ortam, ellerine sağlık ✨", "ayça"],
+            ].map(([note, name]) => (
+              <div
+                key={name}
+                className="rounded-2xl border border-white/70 bg-white/80 p-4 text-center shadow-sm dark:border-white/10 dark:bg-white/5"
+              >
+                <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-200">
+                  “{note}”
+                </p>
+
+                <p className="mt-4 text-xs text-[#9b94d9]">
+                  — {name}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+              </div>
+
             {/* SAĞ */}
-            <div className="col-span-3 space-y-6">
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] text-center hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="xl:col-span-3 space-y-6"
+            >
+              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] text-center hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300">
                 <p className="text-sm text-gray-500">günün sözü</p>
 
                 <p className="mt-5 text-sm leading-relaxed">
@@ -261,12 +356,12 @@
                 <p className="text-3xl text-[#9b94d9] mt-4">♡</p>
               </div>
 
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
+              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300">
                 <div className="flex justify-between items-center mb-4">
                   <p className="text-sm font-medium text-gray-700">🎵 playlist</p>
-                  <span className="text-xs text-[#a8a1dc] cursor-pointer">
-                    tümünü aç →
-                  </span>
+                  <Link href="/muzikler" className="text-xs text-[#a8a1dc] hover:underline">
+                  tümünü aç →
+                </Link>
                 </div>
 
                 <div className="space-y-3 text-sm">
@@ -294,7 +389,7 @@
                   </div>
 
                   <div className="flex-1 flex items-center gap-1">
-                    {Array.from({ length: 52 }).map((_, i) => (
+                    {Array.from({ length: 32 }).map((_, i) => (
                       <span
                         key={i}
                         className="w-[3px] bg-[#a8a1dc] rounded-full"
@@ -305,41 +400,54 @@
                 </div>
               </div>
 
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-                <p className="text-sm text-gray-500 mb-3">yapılacaklar</p>
+              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300">
+              <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">
+                bugünkü küçük not
+              </p>
 
-                <ul className="text-sm mt-2 space-y-2">
-                  <li>☑ blog yazısı yaz</li>
-                  <li>☑ kitap oku</li>
-                  <li>☐ spor yap</li>
-                  <li>☐ yeni tarif dene</li>
-                </ul>
-              </div>
+              <div className="rounded-2xl bg-[#f8f5ff] dark:bg-white/10 p-5 text-center">
+                <p className="font-serif italic text-xl text-gray-700 dark:text-gray-100">
+                  “Kendine nazik davran.”
+                </p>
 
-              <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition duration-300">
-                <div className="flex justify-between items-center mb-4">
-                  <p className="text-sm font-medium text-gray-700">anılar</p>
+                <p className="mt-3 text-xs leading-relaxed text-gray-400">
+                  Bugün her şeyi mükemmel yapmak zorunda değilsin.  
+                  Küçük bir adım da yeter.
+                </p>
 
-                  <span className="text-xs text-[#9b94d9] cursor-pointer">
-                    tümünü gör →
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-4 gap-2">
-                  {[1, 2, 3, 4].map((n) => (
-                    <img
-                      key={n}
-                      src={`/foto${n}.jpg`}
-                      alt={`anı ${n}`}
-                      className="rounded-lg h-20 object-cover"
-                    />
-                  ))}
-                </div>
+                <p className="mt-4 text-2xl text-[#a8a1dc]">♡</p>
               </div>
             </div>
+
+                          <div className="bg-white/70 dark:bg-[#171923]/80 backdrop-blur-md p-5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.05)] hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(180,160,230,0.18)] transition-all duration-300">
+              <div className="flex justify-between items-center mb-4">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-100">
+                  anılar
+                </p>
+
+                <Link
+                  href="/foto-kosesi"
+                  className="text-xs text-[#9b94d9] hover:underline"
+                >
+                  tümünü gör →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2">
+                {[1, 2, 3, 4].map((n) => (
+                  <img
+                    key={n}
+                    src={`/foto${n}.jpg`}
+                    alt={`anı ${n}`}
+                    className="rounded-lg h-20 w-full object-cover"
+                  />
+                ))}
+              </div>
+            </div>
+            </motion.div>
           </div>
 
-          <footer className="px-10 pb-6 flex justify-between text-xs text-gray-400">
+          <footer className="flex flex-col gap-2 px-6 pb-6 text-center text-xs text-gray-400 md:flex-row md:justify-between">
             <p>© 2026 ceyda&apos;s diary. tüm hakları saklıdır.</p>
             <p>made with ♡ by ceyda</p>
           </footer>
@@ -354,10 +462,11 @@
           }}
           onClick={() => {
             const messages = [
-              "iyi gidiyorsun 💙",
-              "bir mola ver ☕",
-              "devam et ✨",
-            ];
+            "iyi gidiyorsun ♡",
+            "biraz dinlenmeyi unutma ☕",
+            "bugün de çok güzel ilerledin ✨",
+            "küçük adımlar da başarıdır 🌙",
+          ];
 
             setMessage(messages[Math.floor(Math.random() * messages.length)]);
           }}
@@ -366,7 +475,7 @@
             left: pos.x,
             top: pos.y,
           }}
-          className={`w-32 h-40 cursor-grab hover:scale-110 transition duration-300 ${
+          className={`w-36 h-44 cursor-grab hover:scale-110 transition duration-300 animate-[float_4s_ease-in-out_infinite] ${
             isHolding
               ? "-translate-y-4 rotate-3 scale-110 cursor-grabbing drop-shadow-2xl"
               : "hover:-translate-y-2"
@@ -387,8 +496,7 @@
               left: pos.x + 100,
               top: pos.y + 10,
             }}
-            className="bg-white dark:bg-[#232738] dark:text-gray-100 px-3 py-1 rounded-lg shadow text-sm"
-          >
+            className="rounded-2xl border border-white/70 bg-white/85 px-4 py-2 text-sm text-[#7d7891] shadow-[0_10px_30px_rgba(180,160,230,0.22)] backdrop-blur-md dark:border-white/10 dark:bg-[#232738]/90 dark:text-gray-100"          >
             {message}
           </div>
         )}
@@ -421,6 +529,14 @@
             </div>
           </div>
         )}
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-6 left-6 z-[9999] flex h-11 w-11 items-center justify-center rounded-full border border-white/70 bg-white/80 text-lg text-[#9b94d9] shadow-[0_10px_30px_rgba(180,160,230,0.25)] backdrop-blur-md transition hover:-translate-y-1 hover:bg-[#f7f4ff] dark:border-white/10 dark:bg-[#232738]/90"         
+           title="Yukarı çık"
+        >
+          ↑
+        </button>
       </div>
     );
   }
