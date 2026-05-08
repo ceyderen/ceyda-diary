@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, Suspense} from "react";
 
 type Post = {
   id: string | number;
@@ -37,7 +37,7 @@ const defaultPosts: Post[] = [
   },
 ];
 
-export default function YazilarimPage() {
+function YazilarimContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get("search")?.toLowerCase().trim() || "";
@@ -78,6 +78,7 @@ export default function YazilarimPage() {
 
     localStorage.setItem("posts", JSON.stringify(savedOnly));
   };
+    
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#fbf9ff]">
@@ -221,6 +222,14 @@ export default function YazilarimPage() {
         <p className="mt-2 text-sm">yazıyorum, yaşıyorum, öğreniyorum.</p>
       </footer>
     </main>
+  );
+}
+
+export default function YazilarimPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fbf9ff]" />}>
+      <YazilarimContent />
+    </Suspense>
   );
 }
 
