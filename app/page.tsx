@@ -164,7 +164,7 @@ import { motion } from "framer-motion";
       ["♧", "yazılarım", "/yazilarim"],
       ["▣", "günlüğüm", "/yeni-yazi"],
       ["♫", "müzikler", "/muzikler"],
-      ["▧", "foto köşesi", "/foto-kosesi"],
+      ["▧", "anı defteri", "/foto-kosesi"],
       ["✎", "misafir defteri", "/misafir-defteri"],
       ["♙", "hakkımda", "/hakkimda"],
       ["✉", "iletişim", "/iletisim"],

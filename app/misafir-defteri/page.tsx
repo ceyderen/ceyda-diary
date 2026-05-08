@@ -1,12 +1,18 @@
 "use client";
 
+import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 type GuestNote = {
   id: string;
   name: string;
   message: string;
-  date: string;
+  created_at: string;
 };
 
 export default function MisafirDefteriPage() {
@@ -14,24 +20,40 @@ export default function MisafirDefteriPage() {
   const [message, setMessage] = useState("");
   const [notes, setNotes] = useState<GuestNote[]>([]);
 
+  const fetchNotes = async () => {
+    const { data, error } = await supabase
+      .from("guest_notes")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Notlar alınamadı:", error.message);
+      return;
+    }
+
+    setNotes(data || []);
+  };
+
   useEffect(() => {
-    const saved = localStorage.getItem("guestNotes");
-    if (saved) setNotes(JSON.parse(saved));
+    fetchNotes();
   }, []);
 
-  const saveNote = () => {
+  const saveNote = async () => {
     if (!message.trim()) return;
 
-    const newNote = {
-      id: crypto.randomUUID(),
-      name: name.trim() || "anonim",
-      message,
-      date: new Date().toLocaleDateString("tr-TR"),
-    };
+    const { error } = await supabase.from("guest_notes").insert([
+      {
+        name: name.trim() || "anonim",
+        message: message.trim(),
+      },
+    ]);
 
-    const updated = [newNote, ...notes];
-    setNotes(updated);
-    localStorage.setItem("guestNotes", JSON.stringify(updated));
+    if (error) {
+      console.error("Not kaydedilemedi:", error.message);
+      return;
+    }
+
+    await fetchNotes();
 
     setName("");
     setMessage("");
@@ -92,7 +114,12 @@ export default function MisafirDefteriPage() {
 
                 <div className="mt-5 flex items-center justify-between text-xs">
                   <span className="text-[#9b94d9]">— {note.name}</span>
-                  <span className="text-gray-400">{note.date}</span>
+
+                  <span className="text-gray-400">
+                    {note.created_at
+                      ? new Date(note.created_at).toLocaleDateString("tr-TR")
+                      : ""}
+                  </span>
                 </div>
               </div>
             ))
