@@ -18,6 +18,7 @@ type GuestNote = {
 export default function MisafirDefteriPage() {
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
   const [notes, setNotes] = useState<GuestNote[]>([]);
 
   const fetchNotes = async () => {
@@ -28,14 +29,22 @@ export default function MisafirDefteriPage() {
 
     if (error) {
       console.error("Notlar alınamadı:", error.message);
+      setLoading(false);
       return;
     }
 
     setNotes(data || []);
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchNotes();
+
+    const interval = setInterval(() => {
+      fetchNotes();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const saveNote = async () => {
@@ -67,7 +76,7 @@ export default function MisafirDefteriPage() {
             misafir defteri
           </p>
 
-          <h1 className="font-serif text-5xl text-gray-700">
+          <h1 className="font-serif text-4xl text-gray-700 md:text-5xl">
             içinden geçenleri bırak ♡
           </h1>
 
@@ -102,7 +111,11 @@ export default function MisafirDefteriPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {notes.length > 0 ? (
+          {loading ? (
+            <div className="col-span-full rounded-[28px] border border-[#eee7fb] bg-white/70 p-10 text-center text-gray-400">
+              notlar yükleniyor ♡
+            </div>
+          ) : notes.length > 0 ? (
             notes.map((note) => (
               <div
                 key={note.id}

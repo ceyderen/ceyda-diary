@@ -1,54 +1,61 @@
 "use client";
 
-import Image from "next/image";
+import { createClient } from "@supabase/supabase-js";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, Suspense} from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 type Post = {
   id: string | number;
   title: string;
-  desc?: string;
+  description?: string;
   content?: string;
   image?: string;
-  date?: string;
+  created_at?: string;
+  image_position?: number;
 };
 
-const defaultPosts: Post[] = [
-  {
-    id: 1,
-    title: "yeni başlangıçlar",
-    desc: "Bazen her şeyi geride bırakmak yeni bir sen yazmak demektir.",
-    image: "/post1.jpg",
-    date: "3 Mayıs 2026",
-  },
-  {
-    id: 2,
-    title: "küçük bir not",
-    desc: "Kendime hatırlatma: daha sakin ol.",
-    image: "/post2.jpg",
-    date: "2 Nisan 2026",
-  },
-  {
-    id: 3,
-    title: "içime dönmek",
-    desc: "Bazen dış dünyadan uzaklaşmak gerekir.",
-    image: "/post3.jpg",
-    date: "8 Mart 2026",
-  },
-];
+function formatDate(date?: string) {
+  if (!date) return "bugün";
+
+  const parsed = new Date(date);
+
+  if (Number.isNaN(parsed.getTime())) return "bugün";
+
+  return parsed.toLocaleDateString("tr-TR");
+}
 
 function YazilarimContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get("search")?.toLowerCase().trim() || "";
 
-  const [posts, setPosts] = useState<Post[]>(defaultPosts);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("posts");
-    const savedPosts: Post[] = saved ? JSON.parse(saved) : [];
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("id,title,description,image,image_position,created_at")
+        .order("created_at", { ascending: false });
 
-    setPosts([...savedPosts, ...defaultPosts]);
+      if (error) {
+        console.error("Yazılar alınamadı:", error.message);
+        setPosts([]);
+        setLoading(false);
+        return;
+      }
+
+      setPosts(data || []);
+      setLoading(false);
+    };
+
+    fetchPosts();
   }, []);
 
   const filteredPosts = useMemo(() => {
@@ -56,29 +63,55 @@ function YazilarimContent() {
 
     return posts.filter((post) => {
       const title = post.title?.toLowerCase() || "";
-      const desc = post.desc?.toLowerCase() || "";
+      const description = post.description?.toLowerCase() || "";
       const content = post.content?.toLowerCase() || "";
-      const date = post.date?.toLowerCase() || "";
+      const date = post.created_at?.toLowerCase() || "";
 
       return (
         title.includes(search) ||
-        desc.includes(search) ||
+        description.includes(search) ||
         content.includes(search) ||
         date.includes(search)
       );
     });
   }, [posts, search]);
 
-  const deletePost = (id: string | number) => {
-    const updatedPosts = posts.filter((post) => post.id !== id);
+  if (loading) {
+    return (
+      <main className="relative min-h-screen overflow-hidden bg-[#fbf9ff] px-6 py-14">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#a8a1dc]">
+            blog
+          </p>
 
-    setPosts(updatedPosts);
+          <h1 className="mb-6 font-serif text-5xl text-gray-700 md:text-6xl">
+            yazılarım <span className="text-[#2f3c5b]">♡</span>
+          </h1>
 
-    const savedOnly = updatedPosts.filter((post) => typeof post.id === "string");
+          <p className="mb-10 text-lg text-gray-500">
+            düşüncelerim, notlarım ve küçük hikâyelerim.
+          </p>
 
-    localStorage.setItem("posts", JSON.stringify(savedOnly));
-  };
-    
+          <div className="space-y-10">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="flex animate-pulse flex-col gap-6 rounded-3xl border border-gray-100 bg-white/80 p-5 shadow-sm sm:flex-row sm:items-center"
+              >
+                <div className="h-44 w-full rounded-xl bg-[#eee7fb] sm:h-28 sm:w-40" />
+
+                <div className="flex-1">
+                  <div className="mb-4 h-3 w-24 rounded-full bg-[#eee7fb]" />
+                  <div className="mb-4 h-7 w-56 rounded-full bg-[#eee7fb]" />
+                  <div className="h-4 w-full max-w-md rounded-full bg-[#eee7fb]" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#fbf9ff]">
@@ -117,44 +150,32 @@ function YazilarimContent() {
                 <div
                   key={`${post.id}-${index}`}
                   onClick={() => router.push(`/yazi/${post.id}`)}
-                  className="flex cursor-pointer items-center gap-6 rounded-3xl border border-gray-100 bg-white/80 p-5 shadow-sm backdrop-blur-md transition hover:-translate-y-1"
+                  className="flex cursor-pointer flex-col gap-6 rounded-3xl border border-gray-100 bg-white/80 p-5 shadow-sm backdrop-blur-md transition hover:-translate-y-1 sm:flex-row sm:items-center"
                 >
-                  <div className="relative h-28 w-40 flex-shrink-0 overflow-hidden rounded-xl">
-                    <Image
-                      src={post.image || `/post${(index % 4) + 1}.jpg`}
-                      alt={post.title}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="relative h-44 w-full flex-shrink-0 overflow-hidden rounded-2xl sm:h-32 sm:w-52">
+                    <img
+                    src={post.image || `/post${(index % 4) + 1}.jpg`}
+                    alt={post.title}
+                    className="h-full w-full object-cover"
+                    style={{
+                      objectPosition: `center ${post.image_position ?? 50}%`,
+                    }}
+                  />
                   </div>
 
                   <div className="flex-1">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="mb-2 text-xs text-gray-400">
-                          {post.date || "bugün"}
-                        </p>
+                    <p className="mb-2 text-xs text-gray-400">
+                      {formatDate(post.created_at)}
+                    </p>
 
-                        <h2 className="font-serif text-2xl text-gray-800">
-                          {post.title}{" "}
-                          <span className="text-[#a8a1dc]">♡</span>
-                        </h2>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deletePost(post.id);
-                        }}
-                        className="text-lg text-gray-300 transition hover:text-[#a8a1dc]"
-                      >
-                        ✕
-                      </button>
-                    </div>
+                    <h2 className="font-serif text-2xl text-gray-800">
+                      {post.title} <span className="text-[#a8a1dc]">♡</span>
+                    </h2>
 
                     <p className="mt-2 text-sm leading-relaxed text-gray-500">
-                      {post.desc || post.content || "Bu yazı için kısa açıklama yok."}
+                      {post.description ||
+                        post.content ||
+                        "Bu yazı için kısa açıklama yok."}
                     </p>
                   </div>
                 </div>
@@ -162,10 +183,10 @@ function YazilarimContent() {
             ) : (
               <div className="rounded-3xl border border-[#eee7fb] bg-white/80 p-10 text-center shadow-sm backdrop-blur-md">
                 <p className="font-serif text-2xl text-gray-700">
-                  sonuç bulunamadı ♡
+                  henüz yazı yok ♡
                 </p>
                 <p className="mt-3 text-sm text-gray-400">
-                  Başlık, açıklama veya yazı içeriğinde tekrar aramayı dene.
+                  Günlüğüm panelinden ilk yazını ekleyebilirsin.
                 </p>
               </div>
             )}
@@ -205,12 +226,13 @@ function YazilarimContent() {
             <div className="space-y-5">
               {posts.slice(0, 3).map((post, index) => (
                 <RelatedPost
-                  key={`${post.id}-${index}`}
-                  image={post.image || `/post${(index % 4) + 1}.jpg`}
-                  title={post.title}
-                  date={post.date || "bugün"}
-                  href={`/yazi/${post.id}`}
-                />
+                key={`${post.id}-${index}`}
+                image={post.image || `/post${(index % 4) + 1}.jpg`}
+                imagePosition={post.image_position ?? 50}
+                title={post.title}
+                date={formatDate(post.created_at)}
+                href={`/yazi/${post.id}`}
+              />
               ))}
             </div>
           </SideCard>
@@ -271,11 +293,13 @@ function Song({
 
 function RelatedPost({
   image,
+  imagePosition,
   title,
   date,
   href,
 }: {
   image: string;
+  imagePosition: number;
   title: string;
   date: string;
   href: string;
@@ -288,14 +312,24 @@ function RelatedPost({
       className="flex cursor-pointer items-center gap-4 rounded-2xl p-2 transition hover:bg-[#f7f5ff]"
     >
       <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-gray-100">
-        <Image src={image} alt={title} fill className="object-cover" />
+        <img
+          src={image}
+          alt={title}
+          className="h-full w-full object-cover"
+          style={{
+            objectPosition: `center ${imagePosition}%`,
+          }}
+        />
       </div>
 
       <div>
         <h4 className="text-sm font-semibold leading-snug text-gray-700">
           {title}
         </h4>
-        <p className="mt-1 text-sm text-gray-400">{date}</p>
+
+        <p className="mt-1 text-sm text-gray-400">
+          {date}
+        </p>
       </div>
     </div>
   );

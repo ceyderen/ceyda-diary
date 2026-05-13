@@ -1,8 +1,20 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "@supabase/supabase-js";
 import { use, useEffect, useState } from "react";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+type Comment = {
+  id: string;
+  name: string;
+  message: string;
+  created_at: string;
+};
 
 const defaultPosts = [
   {
@@ -13,10 +25,8 @@ const defaultPosts = [
     desc: "Bazen her şeyi geride bırakmak yeni bir sen yazmak demektir.",
     content: [
       "Bugün biraz durup düşündüm.",
-      "Hayat bazen çok hızlı akıyor ve biz fark etmeden aynı yerde kalıyoruz. Belki de bazı şeyleri bırakmak, yeniden başlamak için gerekli.",
+      "Hayat bazen çok hızlı akıyor ve biz fark etmeden aynı yerde kalıyoruz.",
       "Kendime bir söz verdim: daha sade, daha gerçek ve daha cesur olacağım.",
-      "Küçük adımlarla, ama istikrarlı bir şekilde. Kimse için değil, kendim için.",
-      "Çünkü en güzel yolculuk, kendine doğru olan yolculuktur.",
     ],
     quote: "Bazen gitmek, kalmaktan daha cesurdur.",
   },
@@ -27,11 +37,11 @@ const defaultPosts = [
     image: "/post2.jpg",
     desc: "Kendime hatırlatma: daha sakin ol.",
     content: [
-      "Bugün kendime küçük bir not bırakmak istedim.",
-      "Her şeyi hemen çözmek zorunda değilim. Bazı şeylerin zamana ihtiyacı var.",
-      "Daha sakin, daha nazik ve daha sabırlı olmayı öğreniyorum.",
+      "Bugün kendime küçük bir not bıraktım.",
+      "Her şeyi aynı anda çözmek zorunda değilim.",
+      "Bazen sadece durmak, nefes almak ve devam etmek yeterli.",
     ],
-    quote: "Kendine iyi davranmak da bir başlangıçtır.",
+    quote: "Küçük adımlar da bir yoldur.",
   },
   {
     id: "3",
@@ -40,13 +50,34 @@ const defaultPosts = [
     image: "/post3.jpg",
     desc: "Bazen dış dünyadan uzaklaşmak gerekir.",
     content: [
-      "Bazen insanın biraz sessizliğe ihtiyacı oluyor.",
-      "Dışarıdaki kalabalık azaldığında, içimdeki sesleri daha net duymaya başlıyorum.",
-      "Belki de büyümek biraz da kendini dinlemeyi öğrenmektir.",
+      "Bugün biraz içime dönmek istedim.",
+      "Kalabalığın içinde bile insan kendi sesini duymaya ihtiyaç duyuyor.",
+      "Sessizlik bazen en güzel cevap oluyor.",
     ],
-    quote: "Sessizlik bazen en doğru cevaptır.",
+    quote: "Kendine dönmek, kaybolmak değil; yolu yeniden bulmaktır.",
   },
 ];
+
+function getUserKey() {
+  let key = localStorage.getItem("ceyda_user_key");
+
+  if (!key) {
+    key = crypto.randomUUID();
+    localStorage.setItem("ceyda_user_key", key);
+  }
+
+  return key;
+}
+
+function timeAgo(date: string) {
+  const diff = Math.floor((Date.now() - new Date(date).getTime()) / 1000);
+
+  if (diff < 60) return "az önce";
+  if (diff < 3600) return `${Math.floor(diff / 60)} dk önce`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} saat önce`;
+
+  return `${Math.floor(diff / 86400)} gün önce`;
+}
 
 export default function PostDetail({
   params,
@@ -56,52 +87,148 @@ export default function PostDetail({
   const { id } = use(params);
 
   const [post, setPost] = useState<any>(null);
-  const [comments, setComments] = useState<string[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [input, setInput] = useState("");
   const [name, setName] = useState("");
-  const [likes, setLikes] = useState(12);
+  const [commentSaving, setCommentSaving] = useState(false);
+  const [likes, setLikes] = useState(0);
   const [liked, setLiked] = useState(false);
+  const [lastRead, setLastRead] = useState<string | null>(null);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("posts");
-    const savedPosts = saved ? JSON.parse(saved) : [];
+  const fetchLikeCount = async () => {
+    const { count } = await supabase
+      .from("post_likes")
+      .select("*", { count: "exact", head: true })
+      .eq("post_id", id);
 
-    const allPosts = [...savedPosts, ...defaultPosts];
-    const foundPost = allPosts.find((item) => String(item.id) === String(id));
-
-    setPost(foundPost || null);
-
-    const savedComments = localStorage.getItem(`comments-${id}`);
-    const savedLikes = localStorage.getItem(`likes-${id}`);
-    const savedLiked = localStorage.getItem(`liked-${id}`);
-
-    if (savedComments) setComments(JSON.parse(savedComments));
-    if (savedLikes) setLikes(JSON.parse(savedLikes));
-    if (savedLiked) setLiked(JSON.parse(savedLiked));
-  }, [id]);
-
-  const addComment = () => {
-    if (!input.trim()) return;
-
-    const newComment = name.trim() ? `${name}: ${input}` : input;
-    const updatedComments = [...comments, newComment];
-
-    setComments(updatedComments);
-    localStorage.setItem(`comments-${id}`, JSON.stringify(updatedComments));
-
-    setInput("");
-    setName("");
+    setLikes(count || 0);
   };
 
-  const toggleLike = () => {
-    const newLiked = !liked;
-    const newLikes = newLiked ? likes + 1 : likes - 1;
+  const fetchLiked = async () => {
+    const userKey = getUserKey();
 
-    setLiked(newLiked);
-    setLikes(newLikes);
+    const { data } = await supabase
+      .from("post_likes")
+      .select("id")
+      .eq("post_id", id)
+      .eq("user_key", userKey)
+      .maybeSingle();
 
-    localStorage.setItem(`liked-${id}`, JSON.stringify(newLiked));
-    localStorage.setItem(`likes-${id}`, JSON.stringify(newLikes));
+    setLiked(!!data);
+  };
+
+  const fetchComments = async () => {
+    const { data, error } = await supabase
+      .from("post_comments")
+      .select("*")
+      .eq("post_id", id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Yorumlar alınamadı:", error.message);
+      return;
+    }
+
+    setComments(data || []);
+  };
+
+  const saveReadTime = async () => {
+    const userKey = getUserKey();
+
+    const { data: oldRead } = await supabase
+      .from("post_reads")
+      .select("last_read_at")
+      .eq("post_id", id)
+      .eq("user_key", userKey)
+      .maybeSingle();
+
+    if (oldRead?.last_read_at) {
+      setLastRead(oldRead.last_read_at);
+    }
+
+    await supabase.from("post_reads").upsert(
+      {
+        post_id: id,
+        user_key: userKey,
+        last_read_at: new Date().toISOString(),
+      },
+      {
+        onConflict: "post_id,user_key",
+      }
+    );
+  };
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      const { data } = await supabase
+        .from("posts")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (data) {
+        setPost(data);
+      } else {
+        const foundDefault = defaultPosts.find(
+          (item) => String(item.id) === String(id)
+        );
+        setPost(foundDefault || null);
+      }
+    };
+
+    fetchPost();
+    fetchComments();
+    fetchLikeCount();
+    fetchLiked();
+    saveReadTime();
+  }, [id]);
+
+  const addComment = async () => {
+  if (commentSaving) return;
+  if (!input.trim()) return;
+
+  setCommentSaving(true);
+
+  const { error } = await supabase.from("post_comments").insert({
+    post_id: id,
+    name: name.trim() || "misafir",
+    message: input.trim(),
+  });
+
+  if (error) {
+    console.error("Yorum eklenemedi:", error.message);
+    setCommentSaving(false);
+    return;
+  }
+
+  setInput("");
+  setName("");
+  await fetchComments();
+
+  setCommentSaving(false);
+};
+
+  const toggleLike = async () => {
+    const userKey = getUserKey();
+
+    if (liked) {
+      await supabase
+        .from("post_likes")
+        .delete()
+        .eq("post_id", id)
+        .eq("user_key", userKey);
+
+      setLiked(false);
+    } else {
+      await supabase.from("post_likes").insert({
+        post_id: id,
+        user_key: userKey,
+      });
+
+      setLiked(true);
+    }
+
+    fetchLikeCount();
   };
 
   if (!post) {
@@ -142,7 +269,7 @@ export default function PostDetail({
         <article className="mt-10 rounded-[36px] bg-white/75 backdrop-blur-xl border border-[#eee7fb] shadow-[0_20px_80px_rgba(180,160,220,0.14)] p-8 md:p-12">
           <header className="mb-8">
             <p className="text-xs tracking-[0.25em] uppercase text-[#a78bfa] font-semibold mb-5">
-              Blog • {post.date}
+              Blog • {post.date || new Date(post.created_at).toLocaleDateString("tr-TR")}
             </p>
 
             <h1 className="font-serif text-5xl md:text-7xl text-[#2f3c5b] leading-tight">
@@ -150,18 +277,19 @@ export default function PostDetail({
             </h1>
 
             <p className="text-lg text-[#6f7b98] leading-relaxed mt-6 max-w-2xl">
-              {post.desc}
+              {post.desc || post.description}
             </p>
           </header>
 
           <div className="relative w-full h-[410px] rounded-[32px] overflow-hidden shadow-[0_18px_45px_rgba(180,160,220,0.18)] mb-12">
-            <Image
-              src={post.image || "/post1.jpg"}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-            />
+            <img
+            src={post.image || "/post1.jpg"}
+            alt={post.title}
+            className="h-full w-full object-cover"
+            style={{
+              objectPosition: `center ${post.image_position ?? 50}%`,
+            }}
+          />
           </div>
 
           <section className="max-w-2xl space-y-7 text-[16px] leading-8 text-[#5f6b87]">
@@ -197,7 +325,9 @@ export default function PostDetail({
               {liked ? "♥" : "♡"} {likes} beğeni
             </button>
 
-            <span>okundu • 3 dk</span>
+            <span>
+              okundu • {lastRead ? timeAgo(lastRead) : "ilk kez"}
+            </span>
           </div>
 
           <div className="max-w-2xl mt-12 bg-white/85 rounded-[30px] shadow-sm border border-[#eee7fb] p-6">
@@ -222,36 +352,43 @@ export default function PostDetail({
 
             <div className="flex justify-end mt-4">
               <button
-                onClick={addComment}
-                className="px-6 py-2.5 rounded-full bg-[#b79df7] text-white text-sm shadow-[0_10px_30px_rgba(183,157,247,0.28)] hover:bg-[#aa8ff3] transition"
-              >
-                gönder
-              </button>
+              onClick={addComment}
+              disabled={commentSaving}
+              className={`px-6 py-2.5 rounded-full text-white text-sm shadow-[0_10px_30px_rgba(183,157,247,0.28)] transition ${
+                commentSaving
+                  ? "cursor-not-allowed bg-gray-300"
+                  : "bg-[#b79df7] hover:bg-[#aa8ff3]"
+              }`}
+            >
+              {commentSaving ? "gönderiliyor..." : "gönder"}
+            </button>
             </div>
 
             <div className="mt-6 space-y-3">
-              {comments.map((comment, index) => (
-                <div
-                  key={index}
-                  className="bg-[#f7f2ff] px-4 py-3 rounded-xl text-sm text-[#5f6b87] flex justify-between gap-4"
-                >
-                  <span>{comment}</span>
-
-                  <button
-                    onClick={() => {
-                      const updated = comments.filter((_, i) => i !== index);
-                      setComments(updated);
-                      localStorage.setItem(
-                        `comments-${id}`,
-                        JSON.stringify(updated)
-                      );
-                    }}
-                    className="text-[#a5adc2] hover:text-[#a78bfa] transition"
+              {comments.length === 0 ? (
+                <p className="text-sm text-[#a5adc2]">
+                  henüz yorum yok, ilk yorumu sen bırak ♡
+                </p>
+              ) : (
+                comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="bg-[#f7f2ff] px-4 py-3 rounded-xl text-sm text-[#5f6b87] flex justify-between gap-4"
                   >
-                    sil
-                  </button>
-                </div>
-              ))}
+                    <div>
+                      <p>
+                        <span className="font-semibold text-[#6f5fb8]">
+                          {comment.name}:
+                        </span>{" "}
+                        {comment.message}
+                      </p>
+                      <p className="mt-1 text-xs text-[#a5adc2]">
+                        {timeAgo(comment.created_at)}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </article>

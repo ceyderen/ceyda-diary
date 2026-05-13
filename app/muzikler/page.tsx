@@ -278,11 +278,19 @@
       <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-[#ffeef7]/30 to-[#e9ddff]/50" />
 
       <div className="relative z-10 flex items-center gap-4">
-        <img
-          src={nowPlaying?.albumImage || "/playlist-cover.png"}
-          className="h-20 w-20 rounded-2xl object-cover shadow-[0_10px_25px_rgba(150,120,180,0.28)] ring-4 ring-white/70"
-          alt="album cover"
-        />
+        <div className="h-20 w-20 overflow-hidden rounded-2xl shadow-[0_10px_25px_rgba(150,120,180,0.28)] ring-4 ring-white/70">
+        {nowPlaying?.albumImage ? (
+          <img
+            src={nowPlaying.albumImage}
+            className="h-full w-full object-cover"
+            alt="album cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#f8edff] via-[#fff8fd] to-[#eee7ff] text-4xl text-[#b79df7]">
+            ♫
+          </div>
+        )}
+      </div>
 
         <div className="min-w-0">
           <h4 className="truncate font-semibold text-[#2e3142]">

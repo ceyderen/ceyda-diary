@@ -123,7 +123,7 @@ export default function HakkimdaPage() {
                 <MiniLink
                   href="/foto-kosesi"
                   icon={<Camera />}
-                  title="foto köşesi"
+                  title="anı defteri"
                   desc="objektifimden küçük kareler"
                 />
                 <MiniLink
